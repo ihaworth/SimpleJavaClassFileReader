@@ -18,7 +18,7 @@ public class ConstantPool extends ByteReadingHelper
 
     public void read() throws IOException
     {
-        for (int i = 1; i < constantPoolCount - 1; i++)
+        for (int i = 1; i < (constantPoolCount); i++)
         {
             int constantPoolTagNumber = readU1();
 
@@ -30,10 +30,32 @@ public class ConstantPool extends ByteReadingHelper
             }
             else if (constantPoolTagNumber == ConstantPoolTagType.CONSTANT_Utf8.getTagValue())
             {
-                //                int length = readU2();
                 constantPoolEntries[i] = new ConstantPoolEntry(ConstantPoolTagType.CONSTANT_Utf8);
                 DataInputStream dataInputStream = new DataInputStream(inputStream);
                 constantPoolEntries[i].setUtf8(dataInputStream.readUTF());
+            }
+            else if (constantPoolTagNumber == ConstantPoolTagType.CONSTANT_Integer.getTagValue())
+            {
+                constantPoolEntries[i] = new ConstantPoolEntry(ConstantPoolTagType.CONSTANT_Integer);
+                // TODO Consider doing all access via the data input stream?
+                DataInputStream dataInputStream = new DataInputStream(inputStream);
+                constantPoolEntries[i].setInteger(dataInputStream.readInt());
+            }
+            else if (constantPoolTagNumber == ConstantPoolTagType.CONSTANT_Methodref.getTagValue())
+            {
+                constantPoolEntries[i] = new ConstantPoolEntry(ConstantPoolTagType.CONSTANT_Methodref);
+                constantPoolEntries[i].setClassIndex(readU2());
+                constantPoolEntries[i].setNameAndTypeIndex(readU2());
+            }
+            else if (constantPoolTagNumber == ConstantPoolTagType.CONSTANT_NameAndType.getTagValue())
+            {
+                constantPoolEntries[i] = new ConstantPoolEntry(ConstantPoolTagType.CONSTANT_NameAndType);
+                constantPoolEntries[i].setNameIndex(readU2());
+                constantPoolEntries[i].setDescriptorIndex(readU2());
+            }
+            else
+            {
+                System.err.println("Failed to read constant pool item of tag type: " + constantPoolTagNumber + "\tat index: " + i);
             }
         }
     }

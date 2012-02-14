@@ -100,12 +100,53 @@ public class JavaClassFileReaderTest
     }
 
     @Test
+    public void the8thEntryInTheConstantPoolIsA_CONSTANT_Integer_WithValue10()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(8);
+        assertEquals(ConstantPoolTagType.CONSTANT_Integer, constantPoolEntry.getType());
+        assertEquals(10, constantPoolEntry.getInteger());
+    }
+
+    @Test
+    public void the17thEntryInTheConstantPoolIsA_CONSTANT_Methodref()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(17);
+        assertEquals(ConstantPoolTagType.CONSTANT_Methodref, constantPoolEntry.getType());
+        assertEquals(3, constantPoolEntry.getClassIndex()); // Refers to Object (see above).
+        assertEquals(18, constantPoolEntry.getNameAndTypeIndex()); // Refers to ???
+    }
+
+    @Test
+    public void the18thEntryInTheConstantPoolIsA_CONSTANT_NameAndType_WithValueXXX()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(18);
+        assertEquals(ConstantPoolTagType.CONSTANT_NameAndType, constantPoolEntry.getType());
+        assertEquals(14, constantPoolEntry.getNameIndex()); // Refers to ??
+        assertEquals(15, constantPoolEntry.getDescriptorIndex()); // Refers to ???
+    }
+
+    @Test
     public void canReadAllConstantsInThePool()
     {
         constantPool = javaClassFileReader.getConstantPool();
         for (int i = 1; i < javaClassFileReader.getConstantPoolCount() - 1; i++)
         {
             constantPoolEntry = constantPool.getEntry(i);
+            //
+            //            if (constantPoolEntry.getType() == ConstantPoolTagType.CONSTANT_Utf8)
+            //            {
+            //                System.out.println(i + " " + constantPoolEntry.getUtf8());
+            //            }
         }
     }
+
+    //    @Test
+    //    public void accessFlagsAreXXX()
+    //    {
+    //        assertEquals(8972 /*0x230C*/, javaClassFileReader.getAccessFlags());
+    //    }
+
 }

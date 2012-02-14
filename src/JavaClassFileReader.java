@@ -11,18 +11,25 @@ public class JavaClassFileReader extends ByteReadingHelper
     private int majorVersion;
 
     private int constantPoolCount;
-
     private ConstantPool constantPool;
+
+    private int accessFlags;
 
     public JavaClassFileReader(InputStream inputStream) throws IOException
     {
         super(inputStream);
 
+        readJavaClassFile();
+    }
+
+    private void readJavaClassFile() throws IOException
+    {
         readMagicNumber();
         readMinorVersion();
         readMajorVersion();
         readConstantPoolCount();
         readConstantPool();
+        readAccessFlags();
     }
 
     private void readMagicNumber() throws IOException
@@ -52,6 +59,11 @@ public class JavaClassFileReader extends ByteReadingHelper
         constantPool.read();
     }
 
+    private void readAccessFlags() throws IOException
+    {
+        accessFlags = readU2();
+    }
+
     public byte[] getMagicNumber()
     {
         return magicNumbers;
@@ -75,5 +87,10 @@ public class JavaClassFileReader extends ByteReadingHelper
     public ConstantPool getConstantPool()
     {
         return constantPool;
+    }
+
+    public int getAccessFlags()
+    {
+        return accessFlags;
     }
 }
