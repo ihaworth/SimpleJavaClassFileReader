@@ -28,13 +28,13 @@ public class JavaClassFileReaderTest
     @Test
     public void minorVersionIs0x0000()
     {
-        assertEquals(0, javaClassFileReader.getMinorVersion());
+        assertEquals(0x0000, javaClassFileReader.getMinorVersion());
     }
 
     @Test
     public void majorVersionIs0x0032()
     {
-        assertEquals(0x32, javaClassFileReader.getMajorVersion());
+        assertEquals(0x0032, javaClassFileReader.getMajorVersion());
     }
 
     @Test
