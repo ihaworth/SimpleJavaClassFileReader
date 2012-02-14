@@ -42,4 +42,12 @@ public class JavaClassFileReaderTest
     {
         assertEquals(0x0043, javaClassFileReader.getConstantPoolCount());
     }
+
+    @Test
+    public void theFirstEntryInTheConstantPoolIsA_CONSTANT_Class()
+    {
+        ConstantPool constantPool = javaClassFileReader.getConstantPool();
+        ConstantPoolEntry constantPoolEntry = constantPool.getEntry(1);
+        assertEquals(ConstantPoolTagType.CONSTANT_Class, constantPoolEntry.getType());
+    }
 }

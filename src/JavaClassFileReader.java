@@ -2,25 +2,27 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
-public class JavaClassFileReader
+public class JavaClassFileReader extends ByteReadingHelper
 {
     private static final int MAGIC_NUMBER_LENGTH = 4;
-
-    private final InputStream inputStream;
 
     private byte[] magicNumbers;
     private int minorVersion;
     private int majorVersion;
 
-    private Object constantPoolSize;
+    private int constantPoolCount;
+
+    private ConstantPool constantPool;
 
     public JavaClassFileReader(InputStream inputStream) throws IOException
     {
-        this.inputStream = inputStream;
+        super(inputStream);
+
         readMagicNumber();
         readMinorVersion();
         readMajorVersion();
-        readConstantPoolSize();
+        readConstantPoolCount();
+        readConstantPool();
     }
 
     private void readMagicNumber() throws IOException
@@ -39,17 +41,15 @@ public class JavaClassFileReader
         majorVersion = readU2();
     }
 
-    private void readConstantPoolSize() throws IOException
+    private void readConstantPoolCount() throws IOException
     {
-        constantPoolSize = readU2();
+        constantPoolCount = readU2();
     }
 
-    private int readU2() throws IOException
+    private void readConstantPool() throws IOException
     {
-        byte [] byteArray = new byte[2];
-        inputStream.read(byteArray, 0, 2);
-
-        return (((int)byteArray[0]) << 8) | ((int)byteArray[1]);
+        constantPool = new ConstantPool(inputStream, constantPoolCount);
+        constantPool.read();
     }
 
     public byte[] getMagicNumber()
@@ -67,8 +67,13 @@ public class JavaClassFileReader
         return majorVersion;
     }
 
-    public Object getConstantPoolCount()
+    public int getConstantPoolCount()
     {
-        return constantPoolSize;
+        return constantPoolCount;
+    }
+
+    public ConstantPool getConstantPool()
+    {
+        return constantPool;
     }
 }
