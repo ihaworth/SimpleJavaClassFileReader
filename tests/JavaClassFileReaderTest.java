@@ -10,6 +10,8 @@ import org.junit.Test;
 public class JavaClassFileReaderTest
 {
     private JavaClassFileReader javaClassFileReader;
+    private ConstantPool constantPool;
+    private ConstantPoolEntry constantPoolEntry;
 
     @Before
     public void setUp() throws IOException
@@ -44,10 +46,66 @@ public class JavaClassFileReaderTest
     }
 
     @Test
-    public void theFirstEntryInTheConstantPoolIsA_CONSTANT_Class()
+    public void theFirstEntryInTheConstantPoolIsA_CONSTANT_Class_WithNameIndex0x002()
     {
-        ConstantPool constantPool = javaClassFileReader.getConstantPool();
-        ConstantPoolEntry constantPoolEntry = constantPool.getEntry(1);
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(1);
         assertEquals(ConstantPoolTagType.CONSTANT_Class, constantPoolEntry.getType());
+        assertEquals(0x0002, constantPoolEntry.getNameIndex());
+    }
+
+    @Test
+    public void theSecondEntryInTheConstantPoolIsA_CONSTANT_Utf8_forTheBowlingGameClass()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(2);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("bowling/Game", constantPoolEntry.getUtf8());
+    }
+
+    @Test
+    public void theThirdEntryInTheConstantPoolIsA_CONSTANT_Class_WithNameIndex0x004()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(3);
+        assertEquals(ConstantPoolTagType.CONSTANT_Class, constantPoolEntry.getType());
+        assertEquals(0x0004, constantPoolEntry.getNameIndex());
+    }
+
+    @Test
+    public void theFourthEntryInTheConstantPoolIsA_CONSTANT_Utf8_forTheBowlingGameClass()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(4);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("java/lang/Object", constantPoolEntry.getUtf8());
+    }
+
+    @Test
+    public void theFifthEntryInTheConstantPoolIsA_CONSTANT_Utf8_WithNameIndex0x004()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(5);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("NUM_FRAMES", constantPoolEntry.getUtf8());
+    }
+
+    @Test
+    public void theSixthEntryInTheConstantPoolIsA_CONSTANT_Utf8_WithNameIndex0x004()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(6);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("I", constantPoolEntry.getUtf8());
+    }
+
+    @Test
+    public void canReadAllConstantsInThePool()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        for (int i = 1; i < javaClassFileReader.getConstantPoolCount() - 1; i++)
+        {
+            constantPoolEntry = constantPool.getEntry(i);
+        }
     }
 }
