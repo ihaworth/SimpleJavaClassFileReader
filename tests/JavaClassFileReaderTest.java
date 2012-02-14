@@ -40,6 +40,6 @@ public class JavaClassFileReaderTest
     @Test
     public void constantPoolCountIs0x0043()
     {
-        assertEquals(0x0043, javaClassFileReader.getConstantPoolSize());
+        assertEquals(0x0043, javaClassFileReader.getConstantPoolCount());
     }
 }

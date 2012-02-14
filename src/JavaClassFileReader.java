@@ -67,7 +67,7 @@ public class JavaClassFileReader
         return majorVersion;
     }
 
-    public Object getConstantPoolSize()
+    public Object getConstantPoolCount()
     {
         return constantPoolSize;
     }
