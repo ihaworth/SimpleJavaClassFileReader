@@ -1,6 +1,7 @@
 
 public class ConstantPoolEntry
 {
+    // TODO Refactor to make a hierarchy of entry types?
     private final ConstantPoolTagType constantPoolTagType;
     private int nameIndex;
     private String utf8;

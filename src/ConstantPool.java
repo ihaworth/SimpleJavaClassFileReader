@@ -22,6 +22,8 @@ public class ConstantPool extends ByteReadingHelper
         {
             int constantPoolTagNumber = readU1();
 
+            // TODO Refactor to be more OO and reduce duplication.
+
             if (constantPoolTagNumber == ConstantPoolTagType.CONSTANT_Class.getTagValue())
             {
                 int nameIndex = readU2();

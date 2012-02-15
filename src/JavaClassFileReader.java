@@ -15,6 +15,11 @@ public class JavaClassFileReader extends ByteReadingHelper
 
     private int accessFlags;
 
+    private int thisClassIndex;
+    private int superClassIndex;
+
+    private int interfacesCount;
+
     public JavaClassFileReader(InputStream inputStream) throws IOException
     {
         super(inputStream);
@@ -30,6 +35,9 @@ public class JavaClassFileReader extends ByteReadingHelper
         readConstantPoolCount();
         readConstantPool();
         readAccessFlags();
+        readThisClassIndex();
+        readSuperClassIndex();
+        readInterfacesCount();
     }
 
     private void readMagicNumber() throws IOException
@@ -64,6 +72,21 @@ public class JavaClassFileReader extends ByteReadingHelper
         accessFlags = readU2();
     }
 
+    private void readThisClassIndex() throws IOException
+    {
+        thisClassIndex = readU2();
+    }
+
+    private void readSuperClassIndex() throws IOException
+    {
+        superClassIndex = readU2();
+    }
+
+    private void readInterfacesCount() throws IOException
+    {
+        interfacesCount = readU2();
+    }
+
     public byte[] getMagicNumber()
     {
         return magicNumbers;
@@ -92,5 +115,20 @@ public class JavaClassFileReader extends ByteReadingHelper
     public int getAccessFlags()
     {
         return accessFlags;
+    }
+
+    public int getThisClassIndex()
+    {
+        return thisClassIndex;
+    }
+
+    public int getSuperClassIndex()
+    {
+        return superClassIndex;
+    }
+
+    public int getInterfacesCount()
+    {
+        return interfacesCount;
     }
 }

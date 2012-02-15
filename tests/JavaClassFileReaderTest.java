@@ -1,5 +1,6 @@
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -165,7 +166,7 @@ public class JavaClassFileReaderTest
     }
 
     @Test
-    public void the21stEntryInTheConstantPoolIsA_CONSTANT_Fieldref_WithValueXXX()
+    public void the21stEntryInTheConstantPoolIsA_CONSTANT_Fieldref_ReferringToTheFramesFieldOfTheGameClass()
     {
         constantPool = javaClassFileReader.getConstantPool();
         constantPoolEntry = constantPool.getEntry(21);
@@ -175,7 +176,7 @@ public class JavaClassFileReaderTest
     }
 
     @Test
-    public void the22ndEntryInTheConstantPoolIsA_CONSTANT_NameAndType_WithValueXXX()
+    public void the22ndEntryInTheConstantPoolIsA_CONSTANT_NameAndType_ReferringToTheFramesField()
     {
         constantPool = javaClassFileReader.getConstantPool();
         constantPoolEntry = constantPool.getEntry(22);
@@ -191,18 +192,35 @@ public class JavaClassFileReaderTest
         for (int i = 1; i < javaClassFileReader.getConstantPoolCount() - 1; i++)
         {
             constantPoolEntry = constantPool.getEntry(i);
-            //
+            assertNotNull(constantPoolEntry);
+
             //            if (constantPoolEntry.getType() == ConstantPoolTagType.CONSTANT_Utf8)
-            //            {
-            //                System.out.println(i + " " + constantPoolEntry.getUtf8());
-            //            }
+            //                System.out.println(constantPoolEntry.getUtf8());
         }
     }
 
-    //    @Test
-    //    public void accessFlagsAreXXX()
-    //    {
-    //        assertEquals(8972 /*0x230C*/, javaClassFileReader.getAccessFlags());
-    //    }
+    @Test
+    public void accessFlagsAre0x21()
+    {
+        // Refers to a Public class which treats the super class methods specially when invoked with invokespecial
+        assertEquals(0x21, javaClassFileReader.getAccessFlags());
+    }
 
+    @Test
+    public void thisClassIndexIs1()
+    {
+        assertEquals(1, javaClassFileReader.getThisClassIndex());   // 1 refers to bowling/Game
+    }
+
+    @Test
+    public void superClassIs3()
+    {
+        assertEquals(3, javaClassFileReader.getSuperClassIndex());  // 3 refers to java/lang/Object
+    }
+
+    @Test
+    public void interfacesCountIs0()
+    {
+        assertEquals(0, javaClassFileReader.getInterfacesCount());
+    }
 }
