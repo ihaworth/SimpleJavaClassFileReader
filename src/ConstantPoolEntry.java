@@ -8,6 +8,10 @@ public class ConstantPoolEntry
     private int classIndex;
     private int nameAndTypeIndex;
     private Object descriptorIndex;
+    private int stringIndex;
+    private float floatValue;
+    private long longValue;
+    private double doubleValue;
 
     public ConstantPoolEntry(ConstantPoolTagType constantClass)
     {
@@ -77,5 +81,45 @@ public class ConstantPoolEntry
     public Object getDescriptorIndex()
     {
         return descriptorIndex;
+    }
+
+    public void setStringIndex(int stringIndex)
+    {
+        this.stringIndex = stringIndex;
+    }
+
+    public int getStringIndex()
+    {
+        return stringIndex;
+    }
+
+    public void setFloat(float floatValue)
+    {
+        this.floatValue = floatValue;
+    }
+
+    public float getFloat()
+    {
+        return floatValue;
+    }
+
+    public void setLong(long longValue)
+    {
+        this.longValue = longValue;
+    }
+
+    public long getLong()
+    {
+        return longValue;
+    }
+
+    public void setDouble(double doubleValue)
+    {
+        this.doubleValue = doubleValue;
+    }
+
+    public double getDouble()
+    {
+        return doubleValue;
     }
 }

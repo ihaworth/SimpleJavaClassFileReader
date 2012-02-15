@@ -82,7 +82,7 @@ public class JavaClassFileReaderTest
     }
 
     @Test
-    public void theFifthEntryInTheConstantPoolIsA_CONSTANT_Utf8_WithNameIndex0x004()
+    public void theFifthEntryInTheConstantPoolIsA_CONSTANT_Utf8_NUM_FRAMES()
     {
         constantPool = javaClassFileReader.getConstantPool();
         constantPoolEntry = constantPool.getEntry(5);
@@ -91,7 +91,7 @@ public class JavaClassFileReaderTest
     }
 
     @Test
-    public void theSixthEntryInTheConstantPoolIsA_CONSTANT_Utf8_WithNameIndex0x004()
+    public void theSixthEntryInTheConstantPoolIsA_CONSTANT_Utf8_I()
     {
         constantPool = javaClassFileReader.getConstantPool();
         constantPoolEntry = constantPool.getEntry(6);
@@ -109,23 +109,79 @@ public class JavaClassFileReaderTest
     }
 
     @Test
+    public void the11thEntryInTheConstantPoolIsA_CONSTANT_Utf8_frames()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(11);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("frames", constantPoolEntry.getUtf8());
+    }
+
+    @Test
+    public void the12thEntryInTheConstantPoolIsA_CONSTANT_Utf8_FrameArray()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(12);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("[Lbowling/Frame;", constantPoolEntry.getUtf8());
+    }
+
+    @Test
+    public void the14thEntryInTheConstantPoolIsA_CONSTANT_Utf8_init()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(14);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("<init>", constantPoolEntry.getUtf8());
+    }
+
+    @Test
+    public void the15thEntryInTheConstantPoolIsA_CONSTANT_Utf8_VoidMethodSignature()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(15);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("()V", constantPoolEntry.getUtf8());
+    }
+
+    @Test
     public void the17thEntryInTheConstantPoolIsA_CONSTANT_Methodref()
     {
         constantPool = javaClassFileReader.getConstantPool();
         constantPoolEntry = constantPool.getEntry(17);
         assertEquals(ConstantPoolTagType.CONSTANT_Methodref, constantPoolEntry.getType());
         assertEquals(3, constantPoolEntry.getClassIndex()); // Refers to Object (see above).
-        assertEquals(18, constantPoolEntry.getNameAndTypeIndex()); // Refers to ???
+        assertEquals(18, constantPoolEntry.getNameAndTypeIndex()); // Refers to <init> (See below)
     }
 
     @Test
-    public void the18thEntryInTheConstantPoolIsA_CONSTANT_NameAndType_WithValueXXX()
+    public void the18thEntryInTheConstantPoolIsA_CONSTANT_NameAndType_WithValueInitWithVoidSignature()
     {
         constantPool = javaClassFileReader.getConstantPool();
         constantPoolEntry = constantPool.getEntry(18);
         assertEquals(ConstantPoolTagType.CONSTANT_NameAndType, constantPoolEntry.getType());
-        assertEquals(14, constantPoolEntry.getNameIndex()); // Refers to ??
-        assertEquals(15, constantPoolEntry.getDescriptorIndex()); // Refers to ???
+        assertEquals(14, constantPoolEntry.getNameIndex()); // Refers to <init>
+        assertEquals(15, constantPoolEntry.getDescriptorIndex()); // Refers to ()V signature
+    }
+
+    @Test
+    public void the21stEntryInTheConstantPoolIsA_CONSTANT_Fieldref_WithValueXXX()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(21);
+        assertEquals(ConstantPoolTagType.CONSTANT_Fieldref, constantPoolEntry.getType());
+        assertEquals(1, constantPoolEntry.getClassIndex()); // Refers to bowling/Game (see above).
+        assertEquals(22, constantPoolEntry.getNameAndTypeIndex()); // Refers to Frame[] frames
+    }
+
+    @Test
+    public void the22ndEntryInTheConstantPoolIsA_CONSTANT_NameAndType_WithValueXXX()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(22);
+        assertEquals(ConstantPoolTagType.CONSTANT_NameAndType, constantPoolEntry.getType());
+        assertEquals(11, constantPoolEntry.getNameIndex()); // Refers to the 'frames' field...
+        assertEquals(12, constantPoolEntry.getDescriptorIndex()); // ...of type bowling.Frame[]
     }
 
     @Test
