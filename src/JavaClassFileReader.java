@@ -19,6 +19,11 @@ public class JavaClassFileReader extends ByteReadingHelper
     private int superClassIndex;
 
     private int interfacesCount;
+    private int[] interfaces;
+
+    private int fieldCount;
+
+    private Field[] fields;
 
     public JavaClassFileReader(InputStream inputStream) throws IOException
     {
@@ -38,6 +43,9 @@ public class JavaClassFileReader extends ByteReadingHelper
         readThisClassIndex();
         readSuperClassIndex();
         readInterfacesCount();
+        readInterfaces();
+        readFieldCount();
+        readFields();
     }
 
     private void readMagicNumber() throws IOException
@@ -87,6 +95,31 @@ public class JavaClassFileReader extends ByteReadingHelper
         interfacesCount = readU2();
     }
 
+    private void readInterfaces() throws IOException
+    {
+        interfaces = new int[interfacesCount];
+
+        for (int i = 0; i < interfacesCount; i++)
+        {
+            interfaces[i] = readU2();
+        }
+    }
+
+    private void readFieldCount() throws IOException
+    {
+        fieldCount = readU2();
+    }
+
+    private void readFields() throws IOException
+    {
+        fields = new Field[fieldCount];
+
+        for (int i = 0; i < fieldCount; i++)
+        {
+            fields[i] = new Field(inputStream);
+        }
+    }
+
     public byte[] getMagicNumber()
     {
         return magicNumbers;
@@ -130,5 +163,20 @@ public class JavaClassFileReader extends ByteReadingHelper
     public int getInterfacesCount()
     {
         return interfacesCount;
+    }
+
+    public int[] getInterfaces()
+    {
+        return interfaces;
+    }
+
+    public int getFieldCount()
+    {
+        return fieldCount;
+    }
+
+    public Field getField(int i)
+    {
+        return fields[i];
     }
 }

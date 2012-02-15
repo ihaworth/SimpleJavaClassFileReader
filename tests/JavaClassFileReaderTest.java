@@ -101,12 +101,30 @@ public class JavaClassFileReaderTest
     }
 
     @Test
+    public void the7thEntryInTheConstantPoolIsA_CONSTANT_Utf8_ConstantValue()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(7);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("ConstantValue", constantPoolEntry.getUtf8());
+    }
+
+    @Test
     public void the8thEntryInTheConstantPoolIsA_CONSTANT_Integer_WithValue10()
     {
         constantPool = javaClassFileReader.getConstantPool();
         constantPoolEntry = constantPool.getEntry(8);
         assertEquals(ConstantPoolTagType.CONSTANT_Integer, constantPoolEntry.getType());
         assertEquals(10, constantPoolEntry.getInteger());
+    }
+
+    @Test
+    public void the9thEntryInTheConstantPoolIsA_CONSTANT_Integer_WithValue10()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(9);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("LAST_FRAME", constantPoolEntry.getUtf8());
     }
 
     @Test
@@ -125,6 +143,15 @@ public class JavaClassFileReaderTest
         constantPoolEntry = constantPool.getEntry(12);
         assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
         assertEquals("[Lbowling/Frame;", constantPoolEntry.getUtf8());
+    }
+
+    @Test
+    public void the13thEntryInTheConstantPoolIsA_CONSTANT_Utf8_FrameArray()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(13);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("currentFrame", constantPoolEntry.getUtf8());
     }
 
     @Test
@@ -222,5 +249,70 @@ public class JavaClassFileReaderTest
     public void interfacesCountIs0()
     {
         assertEquals(0, javaClassFileReader.getInterfacesCount());
+    }
+
+    @Test
+    public void interfacesAreNotDefined()
+    {
+        // TODO Refactor to getInterface(index) to be consistent!
+        assertArrayEquals(new int[0], javaClassFileReader.getInterfaces());
+    }
+
+    @Test
+    public void fieldCountIs4()
+    {
+        assertEquals(4, javaClassFileReader.getFieldCount());
+    }
+
+    @Test
+    public void firstFieldIs_NUM_FRAMES()
+    {
+        Field field = javaClassFileReader.getField(0);
+        assertEquals(0x1A, field.getAccessFlags());     // 0x1A is private final static
+        assertEquals(5, field.getNameIndex());          // Entry 5 in the constant pool is NUM_FRAMES
+        assertEquals(6, field.getDescriptorIndex());    // Entry 6 in the constant pool is I
+
+        assertEquals(1, field.getAttributesCount());
+
+        Attribute attribute = field.getAttribute(0);
+        assertEquals(7, attribute.getNameIndex());      // Entry 7 in the constant pool is ConstantValue
+        assertEquals(2, attribute.getLength());         // ConstantValue attributes always have length 2.
+    }
+
+    @Test
+    public void secondFieldIs_LAST_FRAME()
+    {
+        Field field = javaClassFileReader.getField(1);
+        assertEquals(0x1A, field.getAccessFlags());     // 0x1A is private final static
+        assertEquals(9, field.getNameIndex());          // Entry 9 in the constant pool is LAST_FRAME
+        assertEquals(6, field.getDescriptorIndex());    // Entry 6 in the constant pool is I
+
+        assertEquals(1, field.getAttributesCount());
+
+        Attribute attribute = field.getAttribute(0);
+        assertEquals(7, attribute.getNameIndex());      // Entry 7 in the constant pool is ConstantValue
+        assertEquals(2, attribute.getLength());         // ConstantValue attributes always have length 2.
+    }
+
+    @Test
+    public void thirdFieldIs_frames()
+    {
+        Field field = javaClassFileReader.getField(2);
+        assertEquals(0x12, field.getAccessFlags());      // 0x12 is private final
+        assertEquals(11, field.getNameIndex());          // Entry 11 in the constant pool is frames
+        assertEquals(12, field.getDescriptorIndex());    // Entry 12 in the constant pool is [Lbowling/Frame; (i.e. Frame[])
+
+        assertEquals(0, field.getAttributesCount());
+    }
+
+    @Test
+    public void fourthFieldIs_currentFrame()
+    {
+        Field field = javaClassFileReader.getField(3);
+        assertEquals(0x02, field.getAccessFlags());      // 0x02 is private
+        assertEquals(13, field.getNameIndex());          // Entry 13 in the constant pool is currentFrame
+        assertEquals(6, field.getDescriptorIndex());     // Entry 6 in the constant pool is [Lbowling/Frame; (i.e. Frame[])
+
+        assertEquals(0, field.getAttributesCount());
     }
 }

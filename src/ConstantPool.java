@@ -23,6 +23,7 @@ public class ConstantPool extends ByteReadingHelper
             int constantPoolTagNumber = readU1();
 
             // TODO Refactor to be more OO and reduce duplication.
+            // TODO Refactor and get the ConstantPoolEntry to read itself?  This would remove the setters.
 
             if (constantPoolTagNumber == ConstantPoolTagType.CONSTANT_Class.getTagValue())
             {
@@ -57,22 +58,19 @@ public class ConstantPool extends ByteReadingHelper
             {
                 constantPoolEntries[i] = new ConstantPoolEntry(ConstantPoolTagType.CONSTANT_Integer);
                 // TODO Consider doing all access via the data input stream?
-                DataInputStream dataInputStream = new DataInputStream(inputStream);
-                constantPoolEntries[i].setInteger(dataInputStream.readInt());
+                constantPoolEntries[i].setInteger(new DataInputStream(inputStream).readInt());
             }
             else if (constantPoolTagNumber == ConstantPoolTagType.CONSTANT_Float.getTagValue())
             {
                 constantPoolEntries[i] = new ConstantPoolEntry(ConstantPoolTagType.CONSTANT_Float);
                 // TODO Consider doing all access via the data input stream?
-                DataInputStream dataInputStream = new DataInputStream(inputStream);
-                constantPoolEntries[i].setFloat(dataInputStream.readFloat());
+                constantPoolEntries[i].setFloat(new DataInputStream(inputStream).readFloat());
             }
             else if (constantPoolTagNumber == ConstantPoolTagType.CONSTANT_Long.getTagValue())
             {
                 constantPoolEntries[i] = new ConstantPoolEntry(ConstantPoolTagType.CONSTANT_Long);
                 // TODO Consider doing all access via the data input stream?
-                DataInputStream dataInputStream = new DataInputStream(inputStream);
-                constantPoolEntries[i].setLong(dataInputStream.readLong());
+                constantPoolEntries[i].setLong(new DataInputStream(inputStream).readLong());
             }
             else if (constantPoolTagNumber == ConstantPoolTagType.CONSTANT_NameAndType.getTagValue())
             {
@@ -84,14 +82,13 @@ public class ConstantPool extends ByteReadingHelper
             {
                 constantPoolEntries[i] = new ConstantPoolEntry(ConstantPoolTagType.CONSTANT_Float);
                 // TODO Consider doing all access via the data input stream?
-                DataInputStream dataInputStream = new DataInputStream(inputStream);
-                constantPoolEntries[i].setDouble(dataInputStream.readDouble());
+                constantPoolEntries[i].setDouble(new DataInputStream(inputStream).readDouble());
             }
             else if (constantPoolTagNumber == ConstantPoolTagType.CONSTANT_Utf8.getTagValue())
             {
                 constantPoolEntries[i] = new ConstantPoolEntry(ConstantPoolTagType.CONSTANT_Utf8);
-                DataInputStream dataInputStream = new DataInputStream(inputStream);
-                constantPoolEntries[i].setUtf8(dataInputStream.readUTF());
+                // TODO Consider doing all access via the data input stream?
+                constantPoolEntries[i].setUtf8(new DataInputStream(inputStream).readUTF());
             }
             else
             {
