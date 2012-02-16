@@ -222,6 +222,26 @@ public class JavaClassFileReaderTest
     }
 
     @Test
+    public void the23ndEntryInTheConstantPoolIsA_CONSTANT_Methodref_ReferringToTheFramesField()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(23);
+        assertEquals(ConstantPoolTagType.CONSTANT_Methodref, constantPoolEntry.getType());
+        assertEquals(1, constantPoolEntry.getClassIndex()); // Refers to bowling/Game (see above).
+        assertEquals(24, constantPoolEntry.getNameAndTypeIndex()); // Refers to void initFrames() (See below)
+    }
+
+    @Test
+    public void the24thEntryInTheConstantPoolIsA_CONSTANT_Utf8_Code()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(24);
+        assertEquals(ConstantPoolTagType.CONSTANT_NameAndType, constantPoolEntry.getType());
+        assertEquals(25, constantPoolEntry.getNameIndex()); // Refers to initFrames
+        assertEquals(15, constantPoolEntry.getDescriptorIndex()); // Refers to ()V signature
+    }
+
+    @Test
     public void the25thEntryInTheConstantPoolIsA_CONSTANT_Utf8_Code()
     {
         constantPool = javaClassFileReader.getConstantPool();
