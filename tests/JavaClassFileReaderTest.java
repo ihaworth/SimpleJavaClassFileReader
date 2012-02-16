@@ -231,6 +231,51 @@ public class JavaClassFileReaderTest
     }
 
     @Test
+    public void the26thEntryInTheConstantPoolIsA_CONSTANT_Utf8_LineNumberTable()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(26);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("LineNumberTable", constantPoolEntry.getUtf8());
+    }
+
+    @Test
+    public void the27thEntryInTheConstantPoolIsA_CONSTANT_Utf8_LocalVariableTable()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(27);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("LocalVariableTable", constantPoolEntry.getUtf8());
+    }
+
+    @Test
+    public void the39thEntryInTheConstantPoolIsA_CONSTANT_Utf8_LocalVariableTable()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(39);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("StackMapTable", constantPoolEntry.getUtf8());
+    }
+
+    @Test
+    public void the40thEntryInTheConstantPoolIsA_CONSTANT_Utf8_LocalVariableTable()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(40);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("roll", constantPoolEntry.getUtf8());
+    }
+
+    @Test
+    public void the41thEntryInTheConstantPoolIsA_CONSTANT_Utf8_LocalVariableTable()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(41);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("(I)V", constantPoolEntry.getUtf8());
+    }
+
+    @Test
     public void canReadAllConstantsInThePool()
     {
         constantPool = javaClassFileReader.getConstantPool();
@@ -350,13 +395,28 @@ public class JavaClassFileReaderTest
 
         assertEquals(1, method.getAttributesCount());
 
-        Attribute attribute = method.getAttribute(0);
-        assertEquals(16, attribute.getNameIndex());      // Code
-        assertEquals(72, attribute.getLength());
+        CodeAttribute codeAttribute = method.getAttribute(0);
+        assertEquals(16, codeAttribute.getNameIndex());      // Code
+        assertEquals(72, codeAttribute.getLength());
+        assertEquals(2, codeAttribute.getMaxStack());
+        assertEquals(1, codeAttribute.getMaxLocals());
+        assertEquals(18, codeAttribute.getCodeLength());
+        assertArrayEquals(new int[] {42,183,0,17,42,16,10,189,0,19,181,0,21,42,183,0,23,177}, codeAttribute.getCode());
+        assertEquals(0, codeAttribute.getExceptionTableLength());
+        //        assertArrayEquals(new ExceptionTableEntry[0], attribute.getExceptionTableEntry());
+        assertEquals(2, codeAttribute.getAttributesCount());
+
+        Attribute firstAttribute = codeAttribute.getAttribute(0);
+        assertEquals(26, firstAttribute.getNameIndex());      // LineNumberTable
+        assertEquals(18, firstAttribute.getLength());
+
+        Attribute secondAttribute = codeAttribute.getAttribute(1);
+        assertEquals(27, secondAttribute.getNameIndex());      // LocalVariableTable
+        assertEquals(12, secondAttribute.getLength());
     }
 
     @Test
-    public void secondMethodIs_init()
+    public void secondMethodIs_initFrames()
     {
         Method method = javaClassFileReader.getMethod(1);
         assertEquals(0x02, method.getAccessFlags());        // 0x02 is private
@@ -365,8 +425,61 @@ public class JavaClassFileReaderTest
 
         assertEquals(1, method.getAttributesCount());
 
-        Attribute attribute = method.getAttribute(0);
-        assertEquals(16, attribute.getNameIndex());     // Code
-        assertEquals(143, attribute.getLength());
+        CodeAttribute codeAttribute = method.getAttribute(0);
+        assertEquals(16, codeAttribute.getNameIndex());     // Code
+        assertEquals(143, codeAttribute.getLength());
+        assertEquals(4, codeAttribute.getMaxStack());
+        assertEquals(2, codeAttribute.getMaxLocals());
+        assertEquals(58, codeAttribute.getCodeLength());
+        //        assertArrayEquals(new int[] {42,183,0,17,42,16,10,189,0,19,181,0,21,42,183,0,23,177}, codeAttribute.getCode());
+        assertEquals(0, codeAttribute.getExceptionTableLength());
+        //        assertArrayEquals(new ExceptionTableEntry[0], attribute.getExceptionTableEntry());
+        assertEquals(3, codeAttribute.getAttributesCount());
+
+        Attribute firstAttribute = codeAttribute.getAttribute(0);
+        assertEquals(26, firstAttribute.getNameIndex());      // LineNumberTable
+        assertEquals(26, firstAttribute.getLength());
+
+        Attribute secondAttribute = codeAttribute.getAttribute(1);
+        assertEquals(27, secondAttribute.getNameIndex());      // LocalVariableTable
+        assertEquals(22, secondAttribute.getLength());
+
+        Attribute thirdAttribute = codeAttribute.getAttribute(2);
+        assertEquals(39, thirdAttribute.getNameIndex());      // StackMapTable
+        assertEquals(7, thirdAttribute.getLength());
+    }
+
+    @Test
+    public void thirdMethodIs_XXX()
+    {
+        Method method = javaClassFileReader.getMethod(2);
+        assertEquals(0x01, method.getAccessFlags());        // 0x01 is public
+        assertEquals(40, method.getNameIndex());            // roll
+        assertEquals(41, method.getDescriptorIndex());      // ()V
+
+        assertEquals(1, method.getAttributesCount());
+
+        CodeAttribute codeAttribute = method.getAttribute(0);
+        assertEquals(16, codeAttribute.getNameIndex());     // Code
+        assertEquals(97, codeAttribute.getLength());
+        assertEquals(2, codeAttribute.getMaxStack());
+        assertEquals(2, codeAttribute.getMaxLocals());
+        assertEquals(24, codeAttribute.getCodeLength());
+        //        assertArrayEquals(new int[] {42,183,0,17,42,16,10,189,0,19,181,0,21,42,183,0,23,177}, codeAttribute.getCode());
+        assertEquals(0, codeAttribute.getExceptionTableLength());
+        //        assertArrayEquals(new ExceptionTableEntry[0], attribute.getExceptionTableEntry());
+        assertEquals(3, codeAttribute.getAttributesCount());
+
+        Attribute firstAttribute = codeAttribute.getAttribute(0);
+        assertEquals(26, firstAttribute.getNameIndex());      // LineNumberTable
+        assertEquals(18, firstAttribute.getLength());
+
+        Attribute secondAttribute = codeAttribute.getAttribute(1);
+        assertEquals(27, secondAttribute.getNameIndex());      // LocalVariableTable
+        assertEquals(22, secondAttribute.getLength());
+
+        Attribute thirdAttribute = codeAttribute.getAttribute(2);
+        assertEquals(39, thirdAttribute.getNameIndex());      // StackMapTable
+        assertEquals(3, thirdAttribute.getLength());
     }
 }

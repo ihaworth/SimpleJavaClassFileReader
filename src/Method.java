@@ -8,7 +8,7 @@ public class Method extends ByteReadingHelper
     private int nameIndex;
     private int descriptorIndex;
     private int attributesCount;
-    private Attribute[] attributes;
+    private CodeAttribute[] attributes;
 
     public Method(InputStream inputStream) throws IOException
     {
@@ -43,11 +43,11 @@ public class Method extends ByteReadingHelper
 
     private void readAttributes() throws IOException
     {
-        attributes = new Attribute[attributesCount];
+        attributes = new CodeAttribute[attributesCount];
 
         for (int i = 0; i < attributesCount; i++)
         {
-            attributes[i] = new Attribute(inputStream);
+            attributes[i] = new CodeAttribute(inputStream);
         }
     }
 
@@ -71,7 +71,7 @@ public class Method extends ByteReadingHelper
         return attributesCount;
     }
 
-    public Attribute getAttribute(int i)
+    public CodeAttribute getAttribute(int i)
     {
         return attributes[i];
     }

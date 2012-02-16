@@ -13,6 +13,11 @@ public class Attribute extends ByteReadingHelper
 
         readNameIndex();
         readLength();
+        readSpecificFields();
+    }
+
+    protected void readSpecificFields() throws IOException
+    {
         // TODO Read the specific data for each type instead of just chewing through the bytes.
         readRemainingBytes();
     }
