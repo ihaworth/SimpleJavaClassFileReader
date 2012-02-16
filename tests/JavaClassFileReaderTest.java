@@ -173,6 +173,15 @@ public class JavaClassFileReaderTest
     }
 
     @Test
+    public void the16thEntryInTheConstantPoolIsA_CONSTANT_Utf8_Code()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(16);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("Code", constantPoolEntry.getUtf8());
+    }
+
+    @Test
     public void the17thEntryInTheConstantPoolIsA_CONSTANT_Methodref()
     {
         constantPool = javaClassFileReader.getConstantPool();
@@ -210,6 +219,15 @@ public class JavaClassFileReaderTest
         assertEquals(ConstantPoolTagType.CONSTANT_NameAndType, constantPoolEntry.getType());
         assertEquals(11, constantPoolEntry.getNameIndex()); // Refers to the 'frames' field...
         assertEquals(12, constantPoolEntry.getDescriptorIndex()); // ...of type bowling.Frame[]
+    }
+
+    @Test
+    public void the25thEntryInTheConstantPoolIsA_CONSTANT_Utf8_Code()
+    {
+        constantPool = javaClassFileReader.getConstantPool();
+        constantPoolEntry = constantPool.getEntry(25);
+        assertEquals(ConstantPoolTagType.CONSTANT_Utf8, constantPoolEntry.getType());
+        assertEquals("initFrames", constantPoolEntry.getUtf8());
     }
 
     @Test
@@ -314,5 +332,41 @@ public class JavaClassFileReaderTest
         assertEquals(6, field.getDescriptorIndex());     // Entry 6 in the constant pool is [Lbowling/Frame; (i.e. Frame[])
 
         assertEquals(0, field.getAttributesCount());
+    }
+
+    @Test
+    public void methodCountIs6()
+    {
+        assertEquals(6, javaClassFileReader.getMethodCount());
+    }
+
+    @Test
+    public void firstMethodIs_init()
+    {
+        Method method = javaClassFileReader.getMethod(0);
+        assertEquals(0x01, method.getAccessFlags());        // 0x01 is public
+        assertEquals(14, method.getNameIndex());            // <init>
+        assertEquals(15, method.getDescriptorIndex());      // ()V
+
+        assertEquals(1, method.getAttributesCount());
+
+        Attribute attribute = method.getAttribute(0);
+        assertEquals(16, attribute.getNameIndex());      // Code
+        assertEquals(72, attribute.getLength());
+    }
+
+    @Test
+    public void secondMethodIs_init()
+    {
+        Method method = javaClassFileReader.getMethod(1);
+        assertEquals(0x02, method.getAccessFlags());        // 0x02 is private
+        assertEquals(25, method.getNameIndex());            // initFrames
+        assertEquals(15, method.getDescriptorIndex());      // ()V
+
+        assertEquals(1, method.getAttributesCount());
+
+        Attribute attribute = method.getAttribute(0);
+        assertEquals(16, attribute.getNameIndex());     // Code
+        assertEquals(143, attribute.getLength());
     }
 }
